@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour
 	public float spacing = 1f;
 	private int activeIndex = -1;
 	private List<GridSpace> gridArray = new List<GridSpace>();
+	private int[] digitArray = new int[81];
 	void Start()
 	{
 		var boardTransform = boardObj.transform;
@@ -24,7 +25,7 @@ public class GameController : MonoBehaviour
 
 				var rect = go.GetComponent<RectTransform>();
 				rect.localPosition = new Vector3(x * spacing, y * spacing, 0);
-				
+
 				/*
 				string log = "x: " + x;
 				log += ", y: " + y;
@@ -77,13 +78,28 @@ public class GameController : MonoBehaviour
 	}
 	void SetActiveDigit(int digit = 0)
 	{
-		if (activeIndex >= 0 && activeIndex < gridArray.Count)
+		string text = "";
+		if (digit >= 1 && digit <= 9)
+			text = digit.ToString();
+		else digit = 0;
+
+		if (isValidDigit(activeIndex, digit))
 		{
-			string text = "";
-			if (digit >= 1 && digit <= 9)
-				text = digit.ToString();
+			digitArray[activeIndex] = digit;
 			gridArray[activeIndex].SetText(text);
 		}
+	}
+	public bool isValidDigit(int index, int digit)
+	{
+		if (index < 0 || index >= gridArray.Count)
+			return false;
+
+		var peers = GetPeers(index);
+		foreach (var i in peers)
+			if (i != index && digitArray[i] == digit)
+				return false;
+
+		return true;
 	}
 	public void SetActiveIndex(int index)
 	{
