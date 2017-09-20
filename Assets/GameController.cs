@@ -18,10 +18,21 @@ public class GameController : MonoBehaviour
 		{
 			for (int x = -4; x <= 4; x++)
 			{
-				var go = Instantiate(gridObj, Vector3.zero, boardTransform.rotation);
+				var go = Instantiate(gridObj, Vector3.zero, Quaternion.identity);
+				go.transform.localScale = Vector3.one;
 				go.transform.SetParent(boardTransform, false);
-				//go.transform.localScale = boardTransform.localScale;
-				go.transform.position += new Vector3(x * spacing, y * spacing, 0);
+
+				var rect = go.GetComponent<RectTransform>();
+				rect.localPosition = new Vector3(x * spacing, y * spacing, 0);
+				
+				/*
+				string log = "x: " + x;
+				log += ", y: " + y;
+				log += ", s: " + spacing;
+				Debug.Log(log);
+				Debug.Log(rect.localPosition);
+				*/
+
 				var gs = go.GetComponentInChildren<GridSpace>();
 				if (gs)
 				{
